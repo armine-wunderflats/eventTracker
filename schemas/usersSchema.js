@@ -74,6 +74,11 @@ UsersSchema.statics.findUserForLogin = function(username){
     return Users.findOne({username});
 }
 
+UsersSchema.statics.findSchedule = function(name){
+    console.log('looking for schedule');
+    return Users.findOne({schedules: {name}});
+}
+
 
 const Users = mongoose.model('Users', UsersSchema);
 module.exports = Users;
