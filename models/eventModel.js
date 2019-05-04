@@ -1,0 +1,7 @@
+// createEvent(obj)
+// deleteEvent(name)
+// getAllEvents()
+// getEvent(name)
+// getMyEvents()
+// shareEvent(eventName, userName)
+// saveEvent(eventName)
