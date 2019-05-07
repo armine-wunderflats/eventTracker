@@ -1,7 +1,10 @@
 // Create your mongoose user schema here.
+const path = process.cwd();
 const mongoose = require('mongoose');
 const pbkdf2 = require('pbkdf2');
 const Schedule = require(`${path}/schemas/scheduleSchema.js`);
+const Task = require(`${path}/schemas/taskSchema.js`);
+const Event = require(`${path}/schemas/eventSchema.js`);
 
 const UsersSchema = new mongoose.Schema({
     username: {
@@ -42,8 +45,16 @@ const UsersSchema = new mongoose.Schema({
         default: false
     },
     schedules: [{
-        type: String,
-        ref: Schedule
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Schedule'
+    }],
+    tasks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task'
+    }],
+    events: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event'
     }]
 
 });
@@ -77,6 +88,14 @@ UsersSchema.statics.findUserForLogin = function(username){
 UsersSchema.statics.findSchedule = function(name){
     console.log('looking for schedule');
     return Users.findOne({schedules: {name}});
+}
+UsersSchema.statics.findEvent = function(name){
+    console.log('looking for event');
+    return Users.findOne({events: {name}});
+}
+UsersSchema.statics.findTasks = function(name){
+    console.log('looking for task');
+    return Users.findOne({tasks: {name}});
 }
 
 

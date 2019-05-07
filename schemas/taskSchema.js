@@ -8,6 +8,7 @@ const taskSchema = new mongoose.Schema({
         lowercase: true,
         required: [true, 'Task Name is required!'],
         trim: true,
+        unique: true,
         validate: {
             validator: function(v){
                 return v.length >= 4;
@@ -21,6 +22,6 @@ const taskSchema = new mongoose.Schema({
     description: String
 });
 
-const Task = mongoose.model('Task', eventSchema);
+const Task = mongoose.model('Task', taskSchema);
 
 module.exports = Task;

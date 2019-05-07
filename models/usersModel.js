@@ -1,5 +1,5 @@
 const path = process.cwd();
-const Users = require(`${path}/schemas/users.js`);
+const Users = require(`${path}/schemas/usersSchema.js`);
 const {
     UserNotFound,
     UserAlreadyExists,
@@ -76,7 +76,7 @@ async function createUser(user) {
         }
         if(await Users.findUsername(username) || await Users.findEmail(email)){
             console.log("got result");
-            throw new UserAlreadyExists();
+            throw new UserAlreadyExists(username);
         }
         await user.save( function (err, user) {
             if(err){ 

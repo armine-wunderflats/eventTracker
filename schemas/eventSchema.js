@@ -8,16 +8,11 @@ const eventSchema = new mongoose.Schema({
         lowercase: true,
         required: [true, 'Event Name is required!'],
         trim: true,
-        validate: {
-            validator: function(v){
-                return v.length >= 4;
-            },
-            message: 'Invalid Event Name!'
-        }
+        unique: true
     },
     host: {
-        type: String,
-        ref: Users
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
     },
     date: {
         type: Date,
@@ -29,6 +24,12 @@ const eventSchema = new mongoose.Schema({
     description: String
 
 });
+
+
+eventSchema.statics.findEvent = function(name){
+    console.log('looking for event name');
+    return Event.findOne({name});
+}
 
 const Event = mongoose.model('Event', eventSchema);
 
