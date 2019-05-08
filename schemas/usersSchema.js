@@ -71,12 +71,12 @@ UsersSchema.methods.comparePasswords = function(pass){
 }
 
 UsersSchema.statics.findUsername = function(username){
-    console.log('looking for username');
+    console.log(`looking for user ${username}`);
     return Users.findOne({username}, {password: false});
 }
 
 UsersSchema.statics.findEmail = function(email){
-    console.log('looking for password');
+    console.log(`looking for email ${email}`);
     return Users.findOne({email}, {password: false});
 }
 
@@ -84,20 +84,18 @@ UsersSchema.statics.findUserForLogin = function(username){
     console.log('looking for username and password');
     return Users.findOne({username});
 }
-
-UsersSchema.statics.findSchedule = function(name){
-    console.log('looking for schedule');
-    return Users.findOne({schedules: {name}});
+UsersSchema.statics.findMySchedules = function(username){
+    console.log(`looking for schedules for ${username}`);
+    return Users.findOne({username}, {schedules: true});
 }
-UsersSchema.statics.findEvent = function(name){
-    console.log('looking for event');
-    return Users.findOne({events: {name}});
+UsersSchema.statics.findMyEvents = function(username){
+    console.log(`looking for events for ${username}`);
+    return Users.findOne({username}, {events: true});
 }
-UsersSchema.statics.findTasks = function(name){
-    console.log('looking for task');
-    return Users.findOne({tasks: {name}});
+UsersSchema.statics.findMyTasks = function(username){
+    console.log(`looking for tasks for ${username}`);
+    return Users.findOne({username}, {tasks: true});
 }
-
 
 const Users = mongoose.model('Users', UsersSchema);
 module.exports = Users;

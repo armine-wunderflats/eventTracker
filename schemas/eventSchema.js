@@ -11,13 +11,11 @@ const eventSchema = new mongoose.Schema({
         unique: true
     },
     host: {
+        required: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users'
     },
-    date: {
-        type: Date,
-        required: [true, 'Event Date is required!'],
-    },
+    date: Date,
     reminder: Date,
     venue: String,
     price: String,
@@ -27,10 +25,14 @@ const eventSchema = new mongoose.Schema({
 
 
 eventSchema.statics.findEvent = function(name){
-    console.log('looking for event name');
+    console.log(`looking for event ${name}`);
     return Event.findOne({name});
 }
 
+eventSchema.statics.findEventsByIds = function(eventIds){
+    console.log(`looking for event list`);
+    return Event.find({ '_id': { $in : eventIds } });
+}
 const Event = mongoose.model('Event', eventSchema);
 
 module.exports = Event;

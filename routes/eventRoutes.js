@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = process.cwd();
 
-const event = require(`${path}/schemas/eventSchema.js`);
+const Event = require(`${path}/schemas/eventSchema.js`);
 const {
     createEvent,
     getEvent,
@@ -23,8 +23,7 @@ router.post('/', async function(req, res, next) {
         const host = await getUser(body.host);
         const date = new Date(body.date);
         const reminder = new Date(body.reminder);
-        console.log(req.body);
-        const event = new Users({
+        const event = new Event({
             name: body.name,
             host: host,
             date: date,
@@ -33,7 +32,7 @@ router.post('/', async function(req, res, next) {
             price: body.price,
             description: body.description
         });
-        await createEvent(event);
+        await createEvent(event, body.host);
         res.status(200).send('event created!').end();
     }
     catch(err){
@@ -50,9 +49,42 @@ router.get('/', async function(req, res, next){
         next(err);
     }
 })
+
 router.get('/:name', async function(req, res, next){
     try{
         res.json(await getEvent(req.params.name));
+    }
+    catch(err){
+        next(err);
+    }
+})
+
+router.get('/user/:username', async function(req, res, next){
+    try{
+        res.json(await getMyEvents(req.params.username));
+    }
+    catch(err){
+        next(err);
+    }
+})
+
+router.post('/add', async function(req, res, next){
+    try{
+        console.log('adding event to user...');
+        const body = req.body;
+        await addEventToUser(body.eventname, body.username);
+        res.status(200).send('event added to user!').end();
+    }
+    catch(err){
+        next(err);
+    }
+})
+router.post('/delete', async function(req, res, next){
+    try{
+        console.log('deleting event...');
+        const body = req.body;
+        await DeleteEvent(body.name);
+        res.status(200).send('event deleted!').end();
     }
     catch(err){
         next(err);

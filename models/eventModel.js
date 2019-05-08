@@ -13,8 +13,9 @@ async function createEvent(event, username){
     try{
         let name = event.name;
         if(await Event.findEvent(name)){
-            throw new EventAlreadyExists();
+            throw new EventAlreadyExists(name);
         }
+        await Users.findOneAndUpdate({username}, {$push: {events: event}});
         const user = await Users.findUsername(username);
         if(!user){
             throw new UserNotFound(username);
@@ -24,8 +25,7 @@ async function createEvent(event, username){
                 throw err; 
             }
             console.log(name + " event created!");
-        });
-        await Users.find({username}, { $push: { events: event } });
+        });        
         console.log(event);
     }
     catch(err){
@@ -58,7 +58,10 @@ async function getMyEvents(username) {
     if(!user){
         throw new UserNotFound(username);
     }
-    return await Users.find({username}, {events: true});
+    const events = await Users.findMyEvents(username);
+    const eventIds = events.events;
+    console.log(eventIds);
+    return await Event.findEventsByIds(eventIds);
 }
 
 async function addEventToUser(name, username) {
@@ -72,7 +75,7 @@ async function addEventToUser(name, username) {
         if(!event){
             throw new EventNotFound(name);
         }
-        await Users.find({username}, { $push: { events: event } });
+        await Users.findOneAndUpdate({username}, {$push: {events: event}});
 
     }
     catch(err){
@@ -84,7 +87,9 @@ async function addEventToUser(name, username) {
 async function DeleteEvent(name) {
     console.log("deleting event " + name);
      try{
-        await Event.findEvent(name).remove().exec();
+        const event = await Event.findEvent(name);
+        await Event.deleteOne({name});
+        await Users.updateMany({events:event._id},{$pull:{events:event._id}});
         console.log(name + " event deleted!");
     }
     catch(error){
