@@ -12,6 +12,11 @@ const scheduleSchema = new mongoose.Schema({
     description: String
 
 });
+scheduleSchema.statics.findSchedule = function(name){
+    console.log(`looking for shedule ${name}`);
+    return Schedule.findOne({name});
+}
+
 
 const Schedule = mongoose.model('Schedule', scheduleSchema);
 module.exports = Schedule;

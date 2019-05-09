@@ -1,5 +1,5 @@
 
-// getSchedule (sheduleName)
+// getSchedule (scheduleName)
 // getAllSchedules()
 // deleteSchedule(ScheduleName)
 
@@ -9,62 +9,66 @@ const {
     ScheduleAlreadyExists,
     ScheduleNotFound
 } = require(`${path}/errors/errors.js`);
+const Users = require(`${path}/schemas/usersSchema.js`);
+const Schedule = require(`${path}/schemas/scheduleSchema.js`);
 
-async function createSchedule(shedule, username){
+async function createSchedule(schedule, username){
     console.log("createSchedule function called");
     try{
-        let name = shedule.name;
+        let name = schedule.name;
         if(await Schedule.findSchedule(name)){
             throw new ScheduleAlreadyExists();
         }
+        await Users.findOneAndUpdate({username}, {$push: {schedules: schedule}});
         const user = await Users.findUsername(username);
         if(!user){
             throw new UserNotFound(username);
         }
-        await shedule.save( function (err, shedule) {
+        await schedule.save( function (err, schedule) {
             if(err){ 
                 throw err; 
             }
-            console.log(name + " shedule created!");
+            console.log(name + " schedule created!");
         });
-        await Users.find({username}, { $push: { shedules: shedule } });
-        console.log(shedule);
+        console.log(schedule);
     }
     catch(err){
         throw err;
     }
 }
-async function getShedule(name) {
+async function getSchedule(name) {
     try{
-        console.log("getting shedule " + name);
-        const shedule = await Shedule.findShedule(name);
-        if(!shedule){
-            throw new SheduleNotFound(name);
+        console.log("getting schedule " + name);
+        const schedule = await Schedule.findSchedule(name);
+        if(!schedule){
+            throw new ScheduleNotFound(name);
         }
-        return shedule;
+        return schedule;
     }
     catch(error){
-        throw new SheduleNotFound(name);
+        throw new ScheduleNotFound(name);
     }
 }
-async function getAllShedules() {
-    console.log("getting all shedules");
-    return await Shedule.find({});
+async function getAllSchedules() {
+    console.log("getting all schedules");
+    return await Schedule.find({});
 }
-async function DeleteShedule(name) {
-    console.log("deleting shedule " + name);
+async function deleteSchedule(name) {
+    console.log("deleting schedule " + name);
      try{
-        await Shedule.findShedule(name).remove().exec();
-        console.log(name + " shedule deleted!");
+        const schedule = await Schedule.findSchedule(name);
+        await Schedule.deleteOne({name});
+        await Users.updateMany({schedules:schedule._id},{$pull:{schedules:schedule._id}});
+        console.log(name + " schedule deleted!");
     }
     catch(error){
-        throw new SheduleNotFound(name);
+        throw new ScheduleNotFound(name);
     }
 }
 
 module.exports = {
-    createShedule,
-    getShedule,
-    getAllShedules,
+    createSchedule,
+    getSchedule,
+    getAllSchedules,
     deleteSchedule
 }
