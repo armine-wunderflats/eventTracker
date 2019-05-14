@@ -7,6 +7,7 @@ const {
     createSchedule,
     getSchedule,
     getAllSchedules,
+    getMySchedules,
     deleteSchedule
 } = require(`${path}/models/scheduleModel.js`);
 
@@ -33,6 +34,15 @@ router.post('/', async function(req, res, next) {
 router.get('/', async function(req, res, next){
     try{
         res.json(await getAllSchedules());
+    }
+    catch(err){
+        next(err);
+    }
+})
+
+router.get('/user/:username', async function(req, res, next){
+    try{
+        res.json(await getMySchedules(req.params.username));
     }
     catch(err){
         next(err);

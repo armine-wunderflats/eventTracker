@@ -24,10 +24,12 @@ const UsersSchema = new mongoose.Schema({
         type: String,
         lowercase: true,
         unique: true,
-        required: [true, 'Email is required!'],
         trim: true
     },
-    password: String,
+    password: {
+        type:String,
+        required: [true, 'Password is required!']
+    },
     firstName:  {
         type: String,
         trim: true
@@ -73,6 +75,11 @@ UsersSchema.methods.comparePasswords = function(pass){
 UsersSchema.statics.findUsername = function(username){
     console.log(`looking for user ${username}`);
     return Users.findOne({username}, {password: false});
+}
+
+UsersSchema.statics.findUserById = function(_id){
+    console.log(`looking for user ${_id}`);
+    return Users.findOne({_id}, {password: false});
 }
 
 UsersSchema.statics.findEmail = function(email){

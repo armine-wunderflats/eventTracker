@@ -3,35 +3,38 @@ const Users = require(`${path}/schemas/usersSchema.js`);
 const {
     UserNotFound,
     UserAlreadyExists,
+    UsernameAndPasswordMustBeProvided,
     PasswordIncorrect,
     ValidationError,
     UserIsLocked 
 } = require(`${path}/errors/errors.js`);
 
 async function login(username, password) {
-    // if the user is not found, throw UserNotFound error.
-    // if the passwords do not match, throw PasswordIncorrect error.
     let user;
+    if(!password || !username){
+        throw new UsernameAndPasswordMustBeProvided();
+    }
     try {
         user =await Users.findUserForLogin(username);
         console.log("found user: ");
         console.log(user);
     }
     catch(error){
-        throw new UserNotFound;
+        throw new UserNotFound(username);
     }
 
     if(user.locked) {
-        throw new UserIsLocked;
+        throw new UserIsLocked(username);
     }   
 
     if(!user.comparePasswords(password)) {
+
         let count = user.failedLoginCount;
         count++;
         await Users.findOneAndUpdate({username}, { $set: {failedLoginCount: count}});
         if(count >= 3) {
             await Users.findOneAndUpdate({username}, { $set: {locked: true}});
-            throw new UserIsLocked;
+            throw new UserIsLocked(username);
         }
 
         throw new PasswordIncorrect();
@@ -57,6 +60,22 @@ async function getUser(username) {
     }
 }
 
+async function getUserById(_id) {
+    // Call corresponding schema function to retrieve the user and return the result.
+    // if the user is not found, throw UserNotFound error.
+    try{
+        console.log("getting user " + _id);
+        const user = await Users.findUserById(_id);
+        if(!user){
+            throw new UserNotFound(_id);
+        }
+        return user;
+    }
+    catch(error){
+        throw new UserNotFound(_id);
+    }
+}
+
 async function getAllUsers() {
     // Call corresponding schema function to retrieve all users and return the result.
     console.log("getting all users");
@@ -71,6 +90,9 @@ async function createUser(user) {
     try{
         let username = user.username;
         let email = user.email;
+        if(!username || !user.password){
+            throw new UsernameAndPasswordMustBeProvided();
+        }
         if(username.length < 4){
             throw new ValidationError();
         }
@@ -95,5 +117,6 @@ module.exports = {
     login,
     getUser,
     getAllUsers,
+    getUserById,
     createUser
 }

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="./js/functions.js"></script>
+    <title>Event Tracker</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5 mb-4">
+            Fancy Event Tracker
+        </h1>
+        <h3 class="text-center"><i>Please Login or Sign Up</i></h3>
+        <div>
+            <form id="login-form" class="mt-5" style="margin:0 auto; width: 250px;">
+                <p>
+                    <label for="user_login" class="w-100">Username<br>
+                    <input type="text" name="log" id="user_login" class="input w-100" value="" autocapitalize="off" required></label>
+                </p>
+                <p>
+                    <label for="user_pass" class="w-100">Password<br>
+                    <input type="password" name="pwd" id="user_pass" class="input w-100" value="" required></label>
+                </p>
+                <p>
+                    <input type="submit" name="submit" id="login-submit" class="button btn btn-primary w-100" value="Log In">
+                </p>
+                <p>
+                    <input type="button" name="goto-signup" id="goto-signup" class="button btn btn-primary w-100" value="Go To Sign Up">
+                </p>
+            </form>
+            <form id="signup-form" class="mt-5" style="margin:0 auto; width: 250px;">
+                <p>
+                    <label for="new_login" class="w-100">Username *<br>
+                    <input type="text" name="log" id="new_login" class="input w-100" value="" autocapitalize="off" required></label>
+                </p>
+                <p>
+                    <label for="new_pass" class="w-100" >Password *<br>
+                    <input type="password" name="pwd" id="new_pass" class="input w-100" value="" required></label>
+                </p>
+                <p>
+                    <label for="new_email" class="w-100">Email<br>
+                    <input type="email" name="email" id="new_email" class="input w-100" value="" ></label>
+                </p>
+                <p>
+                    <label for="first_name" class="w-100">First Name<br>
+                    <input type="text" name="first-name" id="first_name" class="input w-100" value="" ></label>
+                </p>
+                <p>
+                    <label for="new_email" class="w-100">Last Name<br>
+                    <input type="text" name="last-name" id="last_name" class="input w-100" value="" ></label>
+                </p>
+                <p>
+                    <input type="submit" name="submit" id="signup" class="button btn btn-primary w-100" value="Sign Up">
+                </p>
+                <p>
+                    <input type="button" name="goto-login" id="goto-login" class="button btn btn-primary w-100" value="Go To Log In">
+                </p>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

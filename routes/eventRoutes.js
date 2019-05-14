@@ -21,8 +21,14 @@ router.post('/', async function(req, res, next) {
         console.log('creating event...');
         const body = req.body;
         const host = await getUser(body.host);
-        const date = new Date(body.date);
-        const reminder = new Date(body.reminder);
+        let date='';
+        if(body.date){
+            date = new Date(body.date);
+        }
+        let reminder = '';
+        if(body.reminder){
+            reminder = new Date(body.reminder);
+        }
         const event = new Event({
             name: body.name,
             host: host,

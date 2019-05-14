@@ -5,7 +5,6 @@ const Users = require(`${path}/schemas/usersSchema.js`);
 const eventSchema = new mongoose.Schema({
     name: {
         type: String,
-        lowercase: true,
         required: [true, 'Event Name is required!'],
         trim: true,
         unique: true

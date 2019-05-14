@@ -1,0 +1,44 @@
+*{
+    font-family: monospace;
+    transition: 0.2s;
+}
+h2.panel-title {
+    background-color: #222;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+h2.panel-title a{
+    color: white;
+}
+h2.panel-title:hover {
+    background-color: white;
+    border-radius: 10px;
+    border: 2px solid #222;
+    padding: 10px 20px;
+}
+h2.panel-title:hover a{
+    color: #222;
+}
+#signup-form, #event-form, #schedule_form, #task-form{
+    display: none;
+}
+#event-form, #event-form, #schedule_form, #task-form{
+    width: 200px;
+    margin: 35px auto;
+}
+.panel-group .panel{
+    margin: 20px;
+    width: 33%;
+}
+.panel-group{
+    display: flex;
+}
+@media screen and (max-width: 959px){
+    .panel-group{
+        flex-direction: column;
+    }
+    .panel-group .panel{
+        width: 100%;
+        margin: inherit;
+    }
+}

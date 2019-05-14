@@ -5,6 +5,12 @@ class UserNotFound extends Error {
     }
 }
 
+class UsernameAndPasswordMustBeProvided extends Error {
+    constructor() {
+        super('Both username and password must be provided!');
+    }
+}
+
 class UserAlreadyExists extends Error {
     constructor(username) {
         super(`User ${username} already exists!`);
@@ -21,8 +27,8 @@ class ValidationError extends Error {
     }
 }
 class UserIsLocked extends Error {
-    constructor() {
-        super(`User is locked!`);
+    constructor(username) {
+        super(`User ${username} is locked!`);
     }
 }
 class EventAlreadyExists extends Error {
@@ -62,6 +68,7 @@ module.exports = {
     UserNotFound,
     UserAlreadyExists,
     PasswordIncorrect,
+    UsernameAndPasswordMustBeProvided,
     EventAlreadyExists,
     TaskAlreadyExists,
     ScheduleAlreadyExists,

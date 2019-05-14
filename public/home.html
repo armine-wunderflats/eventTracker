@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="./js/functions.js"></script>
+    <title>Event Tracker</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5 mb-4">My Items</h1>
+         <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                        Events</a>
+                    </h2>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <ul class="list-group" id="events_list">
+                        </ul>
+                        <div class="panel-footer">
+                            <h3 id="event_toggle" class="button btn btn-success w-100" >Add New Event</h3>
+                            <form id="event-form">
+                                <p>
+                                    <label for="event_name" class="w-100">Event Name<br>
+                                    <input type="text" name="event_name" id="event_name" class="input w-100" value="" autocapitalize="off" required></label>
+                                </p>
+                                <p>
+                                    <label for="event_date" class="w-100">Event Date<br>
+                                    <input type="text" name="event_date" id="event_date" class="input w-100" value=""></label>
+                                </p>
+                                <p>
+                                    <label for="event_reminder" class="w-100">Event Reminder<br>
+                                    <input type="text" name="event_reminder" id="event_reminder" class="input w-100" value=""></label>
+                                </p>
+                                <p>
+                                    <label for="event_venue" class="w-100">Event Venue<br>
+                                    <input type="text" name="event_venue" id="event_venue" class="input w-100" value=""></label>
+                                </p>
+                                <p>
+                                    <label for="event_price" class="w-100">Event Price<br>
+                                    <input type="text" name="event_price" id="event_price" class="input w-100" value=""></label>
+                                </p>
+                                <p>
+                                    <label for="event_desc" class="w-100">Event Description<br>
+                                    <textarea name="event_desc" id="event_desc" class="input w-100" value=""></textarea>
+                                </p>
+                                <p>
+                                    <input type="submit" name="submit" id="add_event" class="button btn btn-success w-100" value="Add Event">
+                                </p> 
+                                <p>
+                                    <input type="button" name="cancel" id="cancel_event" class="button btn btn-danger w-100" value="Cancel">
+                                </p> 
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                        Tasks</a>
+                    </h2>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul class="list-group" id="task_list">
+                            <li class="list-group-item">One</li>
+                            <li class="list-group-item">Two</li>
+                            <li class="list-group-item">Three</li>
+                        </ul>
+                        <div class="panel-footer">
+                            <h3 id="task_toggle" class="button btn btn-success w-100" >Add New Task</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                        Shedules</a>
+                    </h2>
+                </div>
+                <div id="collapse3" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul class="list-group" id="schedule_list">
+                        </ul>
+                        <div class="panel-footer">
+                            <h3 id="schedule_toggle" class="button btn btn-success w-100" >Add New Schedule</h3>
+                            <form id="schedule_form">
+                                    <p>
+                                        <label for="schedule_name" class="w-100">Schedule Name<br>
+                                        <input type="text" name="schedule_name" id="schedule_name" class="input w-100" value="" autocapitalize="off" required></label>
+                                    </p>
+                                    <p>
+                                        <label for="schedule_desc" class="w-100">Schedule Description<br>
+                                        <textarea name="schedule_desc" id="schedule_desc" class="input w-100" value=""></textarea>
+                                    </p>
+                                    <p>
+                                        <input type="submit" name="submit" id="add_schedule" class="button btn btn-success w-100" value="Add Schedule">
+                                    </p> 
+                                    <p>
+                                        <input type="button" name="cancel" id="cancel_schedule" class="button btn btn-danger w-100" value="Cancel">
+                                    </p> 
+                                </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

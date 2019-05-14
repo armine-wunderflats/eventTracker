@@ -53,6 +53,16 @@ async function getAllSchedules() {
     console.log("getting all schedules");
     return await Schedule.find({});
 }
+async function getMySchedules(username) {
+    console.log("getting my schedules");
+    const user = await Users.findUsername(username);
+    if(!user){
+        throw new UserNotFound(username);
+    }
+    const schedules = await Users.findMySchedules(username);
+    const scheduleIds = schedules.schedules;
+    return await Schedule.find({ '_id': { $in : scheduleIds }} );
+}
 async function deleteSchedule(name) {
     console.log("deleting schedule " + name);
      try{
@@ -70,5 +80,6 @@ module.exports = {
     createSchedule,
     getSchedule,
     getAllSchedules,
+    getMySchedules,
     deleteSchedule
 }
