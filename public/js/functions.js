@@ -16,6 +16,8 @@ function getCookie(cname) {
   return "";
 }
 $(document).ready(function() {
+
+    // handle login/signup page
     
     $('#login-form').submit(function(event) {
         event.preventDefault();
@@ -55,15 +57,28 @@ $(document).ready(function() {
         window.location.href = "./home.html";
 
     });
+    
+    socket.on('user-created', function(data) {
+        document.cookie = "username=" + data.username;
+        window.location.href = "./home.html";
+    });
+
+    socket.on('error', function(data) {
+        alert(data);
+    });
+
+
     const username = getCookie('username');
 
+    //load data into each panel
     if(username){
         $.get(`/events/user/${username}`, function(data) {
         
             $('#events_list').html(
                 data.map(function(single){
                     let result = `<li class="list-group-item">
-                    <h3>${single.name}</h3>`
+                    <h3>${single.name}</h3>
+                    <span style="display: none;">${single._id}</span>`
                     if(single.date){
                         result += `<p><strong>On: </strong>${single.date}</p>`;
                     }
@@ -83,6 +98,9 @@ $(document).ready(function() {
                     <p class="delete_event">
                         <input type="submit" name="delete" class="button btn btn-danger" value="Delete Event">
                     </p>
+                    <p class="remove_event">
+                        <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Events">
+                    </p>
                     </li>`;
                     return result;
                 })
@@ -96,13 +114,17 @@ $(document).ready(function() {
             $('#schedule_list').html(
                 data.map(function(single){
                     let result = `<li class="list-group-item">
-                    <h3>${single.name}</h3>`
+                    <h3>${single.name}</h3>
+                    <span style="display: none;">${single._id}</span>`
                     if(single.description){
                         result += `<p><strong>Description: </strong>${single.description}</p>`;
                     }
                     result += `
-                    <p class="delete_event">
+                    <p class="delete_shedule">
                         <input type="submit" name="delete" class="button btn btn-danger" value="Delete Schedule">
+                    </p>
+                    <p class="remove_schedule">
+                        <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Schedules">
                     </p>
                     </li>`;
                     return result;
@@ -111,9 +133,67 @@ $(document).ready(function() {
             
 
         });
+        
+        $.get(`/events/all/user/${username}`, function(data) {
+        
+            $('#all_events_list').html(
+                data.map(function(single){
+                    let result = `<li class="list-group-item">
+                    <h3>${single.name}</h3>
+                    <span style="display: none;">${single._id}</span>`
+                    if(single.date){
+                        result += `<p><strong>On: </strong>${single.date}</p>`;
+                    }
+                    if(single.venue){
+                        result += `<p><strong>Venue: </strong>${single.venue}</p>`;
+                    }
+                    if(single.price){
+                        result += `<p><strong>Price: </strong>${single.price}</p>`;
+                    }
+                    if(single.description){
+                        result += `<p><strong>Description: </strong>${single.description}</p>`;
+                    }
+                    if(single.reminder){
+                        result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                    }
+                    result += `
+                    <p class="add_event">
+                        <input type="submit" name="add" class="button btn btn-warning" value="Add To My Events">
+                    </p>
+                    </li>`;
+                    return result;
+                })
+            );
+                
 
+        });
+
+        $.get(`/schedules/all/${username}`, function(data) {
+        
+            $('#all_schedules_list').html(
+                data.map(function(single){
+                    let result = `<li class="list-group-item">
+                    <h3>${single.name}</h3>
+                    <span style="display: none;">${single._id}</span>`
+                    if(single.description){
+                        result += `<p><strong>Description: </strong>${single.description}</p>`;
+                    }
+                    result += `
+                    <p class="add_schedule">
+                        <input type="submit" name="add" class="button btn btn-warning" value="Add To My Schedules">
+                    </p>
+                    </li>`;
+                    return result;
+                })
+            );
+            
+
+        });
     }
 
+        
+    
+    //open and close creation forms
     $('#event_toggle').click(()=>{
         $('#event-form').show();
         $('#event_toggle').hide();
@@ -123,32 +203,8 @@ $(document).ready(function() {
         $('#schedule_form').show();
         $('#schedule_toggle').hide();
     });
-    
-    $('#cancel_event').click(()=>{
-        $('#event_name').val('');
-        $('#event_date').val('');
-        $('#event_reminder').val('');
-        $('#event_venue').val('');
-        $('#event_price').val('');
-        $('#event_desc').val('');
-        $('#event-form').hide();
-        $('#event_toggle').show();
 
-    });
-    $('#cancel_schedule').click(()=>{
-        $('#schedule_name').val('');
-        $('#schedule_desc').val('');
-        $('#schedule_form').hide();
-        $('#schedule_toggle').show();
-
-    });
-    $(document).on('click','.delete_event', function(){
-        let name = $(this).parent().find('h3').get( 0 ).innerHTML;
-        $(this).parent().css("display", "none");
-        $.post("/events/delete", {name},  function(data) {
-            
-        });
-    });
+    //submit creation form
     $('#event-form').submit((event)=>{
         event.preventDefault();
         const name = $('#event_name').val();
@@ -212,14 +268,168 @@ $(document).ready(function() {
         });
     });
     
-    socket.on('user-created', function(data) {
-        document.cookie = "username=" + data.username;
-        window.location.href = "./home.html";
+    //cancel creation
+    $('#cancel_event').click(()=>{
+        $('#event_name').val('');
+        $('#event_date').val('');
+        $('#event_reminder').val('');
+        $('#event_venue').val('');
+        $('#event_price').val('');
+        $('#event_desc').val('');
+        $('#event-form').hide();
+        $('#event_toggle').show();
+
+    });
+    $('#cancel_schedule').click(()=>{
+        $('#schedule_name').val('');
+        $('#schedule_desc').val('');
+        $('#schedule_form').hide();
+        $('#schedule_toggle').show();
+
     });
 
-    socket.on('login-error', function(data) {
-        alert("Login Error!");
+    //delete item completely
+    $(document).on('click','.delete_event', function(){
+        let name = $(this).parent().find('h3').get( 0 ).innerHTML;
+        $(this).parent().css("display", "none");
+        $.post("/events/delete", {name},  function(data) {
+            
+        });
     });
+    $(document).on('click','.delete_schedule', function(){
+        let name = $(this).parent().find('h3').get( 0 ).innerHTML;
+        $(this).parent().css("display", "none");
+        $.post("/schedule/delete", {name},  function(data) {
+            
+        });
+    });
+
+    //add available item to personal list
+    $(document).on('click','.add_event', function(){
+        let username = getCookie('username');
+        let eventname = $(this).parent().find('h3').get( 0 ).innerHTML;
+        $.get(`/events/${eventname}`, function(single) {
+            let result = `<li class="list-group-item">
+            <h3>${single.name}</h3>
+            <span style="display: none;">${single._id}</span>`
+            if(single.date){
+                result += `<p><strong>On: </strong>${single.date}</p>`;
+            }
+            if(single.venue){
+                result += `<p><strong>Venue: </strong>${single.venue}</p>`;
+            }
+            if(single.price){
+                result += `<p><strong>Price: </strong>${single.price}</p>`;
+            }
+            if(single.description){
+                result += `<p><strong>Description: </strong>${single.description}</p>`;
+            }
+            if(single.reminder){
+                result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+            }
+            result += `
+            <p class="delete_event">
+                <input type="submit" name="delete" class="button btn btn-danger" value="Delete Event">
+            </p>
+            <p class="remove_event">
+                <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Events">
+            </p>
+            </li>`;
+            $('#events_list').append(result);
+        });
+        $(this).parent().css("display", "none");
+        $.post("/events/add", {eventname, username},  function(data) {
+            
+        });
+    });
+
+    $(document).on('click','.add_schedule', function(){
+        let username = getCookie('username');
+        let schedulename = $(this).parent().find('h3').get( 0 ).innerHTML;
+        $.get(`/schedules/${schedulename}`, function(single) {
+            let result = `<li class="list-group-item">
+            <h3>${single.name}</h3>
+            <span style="display: none;">${single._id}</span>`
+            if(single.description){
+                result += `<p><strong>Description: </strong>${single.description}</p>`;
+            }
+            result += `
+            <p class="delete_shedule">
+                <input type="submit" name="delete" class="button btn btn-danger" value="Delete Schedule">
+            </p>
+            <p class="remove_schedule">
+                <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Schedules">
+            </p>
+            </li>`;
+            $('#schedule_list').append(result);
+        });
+        $(this).parent().css("display", "none");
+        $.post("/schedules/add", {schedulename, username},  function(data) {
+            
+        });
+    });
+
+    //remove item from personal list
+    $(document).on('click','.remove_event', function(){
+        let username = getCookie('username');
+        let eventId = $(this).parent().find('span').get( 0 ).innerHTML;
+        let eventname = $(this).parent().find('h3').get( 0 ).innerHTML;
+        $.get(`/events/${eventname}`, function(single) {
+            let result = `<li class="list-group-item">
+            <h3>${single.name}</h3>
+            <span style="display: none;">${single._id}</span>`
+            if(single.date){
+                result += `<p><strong>On: </strong>${single.date}</p>`;
+            }
+            if(single.venue){
+                result += `<p><strong>Venue: </strong>${single.venue}</p>`;
+            }
+            if(single.price){
+                result += `<p><strong>Price: </strong>${single.price}</p>`;
+            }
+            if(single.description){
+                result += `<p><strong>Description: </strong>${single.description}</p>`;
+            }
+            if(single.reminder){
+                result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+            }
+            result += `
+            <p class="add_event">
+                <input type="submit" name="add" class="button btn btn-warning" value="Add To My Events">
+            </p>
+            </li>`;
+            $('#all_events_list').append(result);
+        });
+        $(this).parent().css("display", "none");
+        $.post("/events/remove", {eventId, username},  function(data) {
+            
+        });
+    });
+    $(document).on('click','.remove_schedule', function(){
+        let username = getCookie('username');
+        let scheduleId = $(this).parent().find('span').get( 0 ).innerHTML;
+        let schedulename = $(this).parent().find('h3').get( 0 ).innerHTML;
+        $.get(`/schedules/${schedulename}`, function(single) {
+            let result = `<li class="list-group-item">
+            <h3>${single.name}</h3>
+            <span style="display: none;">${single._id}</span>`
+            if(single.description){
+                result += `<p><strong>Description: </strong>${single.description}</p>`;
+            }
+            result += `
+            <p class="add_schedule">
+                <input type="submit" name="add" class="button btn btn-warning" value="Add To My Schedules">
+            </p>
+            </li>`;
+            $('#all_schedules_list').append(result);
+        });
+        $(this).parent().css("display", "none");
+        $.post("/schedules/remove", {scheduleId, username},  function(data) {
+            
+        });
+    });
+    
+    
 
 });
 

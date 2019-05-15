@@ -13,31 +13,45 @@ async function login(username, password) {
     let user;
     if(!password || !username){
         throw new UsernameAndPasswordMustBeProvided();
+        return;
     }
     try {
         user =await Users.findUserForLogin(username);
+        if(!user){
+            throw new UserNotFound(username);
+            return;
+        }
         console.log("found user: ");
         console.log(user);
     }
     catch(error){
         throw new UserNotFound(username);
+        return;
     }
 
     if(user.locked) {
         throw new UserIsLocked(username);
+        return;
     }   
 
     if(!user.comparePasswords(password)) {
+        try{
 
-        let count = user.failedLoginCount;
-        count++;
-        await Users.findOneAndUpdate({username}, { $set: {failedLoginCount: count}});
-        if(count >= 3) {
-            await Users.findOneAndUpdate({username}, { $set: {locked: true}});
-            throw new UserIsLocked(username);
+            let count = user.failedLoginCount;
+            count++;
+            await Users.findOneAndUpdate({username}, { $set: {failedLoginCount: count}});
+            if(count >= 3) {
+                await Users.findOneAndUpdate({username}, { $set: {locked: true}});
+                throw new UserIsLocked(username);
+                return;
+            }
+        }
+        catch(error){
+            throw error;
         }
 
         throw new PasswordIncorrect();
+        return;
     }
     
     await Users.findOneAndUpdate({username},{ $set: {failedLoginCount: 0}});
@@ -45,13 +59,12 @@ async function login(username, password) {
 }
 
 async function getUser(username) {
-    // Call corresponding schema function to retrieve the user and return the result.
-    // if the user is not found, throw UserNotFound error.
     try{
         console.log("getting user " + username);
         const user = await Users.findUsername(username);
         if(!user){
             throw new UserNotFound(username);
+            return;
         }
         return user;
     }
@@ -61,13 +74,12 @@ async function getUser(username) {
 }
 
 async function getUserById(_id) {
-    // Call corresponding schema function to retrieve the user and return the result.
-    // if the user is not found, throw UserNotFound error.
     try{
         console.log("getting user " + _id);
         const user = await Users.findUserById(_id);
         if(!user){
             throw new UserNotFound(_id);
+            return;
         }
         return user;
     }
@@ -77,32 +89,37 @@ async function getUserById(_id) {
 }
 
 async function getAllUsers() {
-    // Call corresponding schema function to retrieve all users and return the result.
     console.log("getting all users");
-    return await Users.find({}, {password: false});
+    try{
+        return await Users.find({}, {password: false});
+    }
+    catch(err){
+        throw err;
+    }
 }
 
 async function createUser(user) {
-    // Call corresponding schema function to create a user.
-    // If the user already exists mongoose should throw an error.
-    // Catch that error here and throw UserAlreadyExists error instead.
     console.log("createUser function called");
     try{
         let username = user.username;
         let email = user.email;
         if(!username || !user.password){
             throw new UsernameAndPasswordMustBeProvided();
+            return;
         }
         if(username.length < 4){
             throw new ValidationError();
+            return;
         }
         if(await Users.findUsername(username) || await Users.findEmail(email)){
             console.log("got result");
             throw new UserAlreadyExists(username);
+            return;
         }
         await user.save( function (err, user) {
             if(err){ 
                 throw err; 
+                return;
             }
             console.log(username + " user created!");
         });

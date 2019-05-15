@@ -1,4 +1,4 @@
-// Create your mongoose user schema here.
+
 const path = process.cwd();
 const mongoose = require('mongoose');
 const pbkdf2 = require('pbkdf2');

@@ -1,4 +1,4 @@
-// Define routes of /users/ api here
+
 const express = require('express');
 const router = express.Router();
 const path = process.cwd();

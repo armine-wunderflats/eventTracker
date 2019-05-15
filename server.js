@@ -25,7 +25,7 @@ const {
     EventNotFound,
     TaskNotFound,
     ScheduleNotFound,
-    ValidationError, // Username is shorter than 4 characters
+    ValidationError, 
     UserIsLocked 
 }  = require(`${path}/errors/errors.js`);
 
@@ -48,11 +48,10 @@ app.post('/login', async function(req, res, next) {
     await login(body.username, body.password);
     const socketio = req.app.get('socketio');
     socketio.emit('login-successful', body);
-    // res.sendFile(__dirname + '/public/home.html');
     res.status(200).send('login successful');
   }
   catch(err){
-    next(err);;
+    next(err);
     const socketio = req.app.get('socketio');
     socketio.emit('login-error');
   }
@@ -61,46 +60,67 @@ app.post('/login', async function(req, res, next) {
 
 app.use(function (err, req, res, next) {
 
-  // This method will catch errors thrown in the application automatically.
-  // Check the error type and return the corresponding error code.
   console.log("checking error type");
   if(err instanceof UserNotFound){
+    socketio.emit('error', err.message);
     res.status(404).send("The requested user was not found!").end();
+    return;
   }
   if(err instanceof EventNotFound){
+    socketio.emit('error', err.message);
     res.status(404).send("The requested event was not found!").end();
+    return;
   }
   if(err instanceof TaskNotFound){
+    socketio.emit('error', err.message);
     res.status(404).send("The requested task was not found!").end();
+    return;
   }
   if(err instanceof ScheduleNotFound){
+    socketio.emit('error', err.message);
     res.status(404).send("The requested schedule was not found!").end();
+    return;
   }
   if(err instanceof UserAlreadyExists){
+    socketio.emit('error', err.message);
     res.status(409).send("A user with that username or email already exists!").end();
+    return;
   }
   if(err instanceof EventAlreadyExists){
+    socketio.emit('error', err.message);
     res.status(409).send("An event with that name already exists!").end();
+    return;
   }
   if(err instanceof TaskAlreadyExists){
+    socketio.emit('error', err.message);
     res.status(409).send("A task with that name already exists!").end();
+    return;
   }
   if(err instanceof ScheduleAlreadyExists){
+    socketio.emit('error', err.message);
     res.status(409).send("A schedule with that name already exists!").end();
+    return;
   }
   if(err instanceof PasswordIncorrect){
+    socketio.emit('error', err.message);
     res.status(401).send("The password you entered is incorrect!").end();
+    return;
   }
   if(err instanceof UsernameAndPasswordMustBeProvided){
+    socketio.emit('error', err.message);
     res.status(400).send("You are missing your username or password!").end();
+    return;
   }
   if(err instanceof ValidationError){
+    socketio.emit('error', err.message);
     res.status(400).send("The username you entered is not valid!").end();
+    return;
   }
   if(err instanceof UserIsLocked){
+    socketio.emit('error', err.message);
     res.status(423).send("You exceeded the maximum login attempts! The user is locked!").end();
+    return;
   }
-
   // If the error is not known
   console.error(err.stack);
   socketio.emit('error', err.message);
@@ -115,4 +135,3 @@ socketio.on('connect', function() {
 http.listen(3000, function() {
     console.log('server is up and running...');
 });
-module.exports = app; // for testing

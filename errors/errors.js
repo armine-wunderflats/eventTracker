@@ -18,17 +18,17 @@ class UserAlreadyExists extends Error {
 }
 class PasswordIncorrect extends Error {
     constructor() {
-        super('Password is wrong!');
+        super('The provided password is wrong!');
     }
 }
 class ValidationError extends Error {
     constructor() {
-        super('Validation Error!');
+        super('Validation Error! Username must be at least 4 characters.');
     }
 }
 class UserIsLocked extends Error {
     constructor(username) {
-        super(`User ${username} is locked!`);
+        super(`The provided passport is wrong! User ${username} now is locked!`);
     }
 }
 class EventAlreadyExists extends Error {
@@ -48,7 +48,7 @@ class ScheduleAlreadyExists extends Error {
 }
 class EventNotFound extends Error {
     constructor(name) {
-        super(`Event ${name}  was not found!`);
+        super(`Event ${name} was not found!`);
     }
 }
 class TaskNotFound extends Error {
@@ -75,6 +75,6 @@ module.exports = {
     EventNotFound,
     TaskNotFound,
     ScheduleNotFound,
-    ValidationError, // Username is shorter than 4 characters
-    UserIsLocked // BONUS
+    ValidationError, 
+    UserIsLocked 
 }

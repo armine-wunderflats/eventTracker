@@ -2,4 +2,5 @@
 // deleteTask(name)
 // getAllTasks()
 // getMyTasks()
+// getAvailableTasks()
 // getTask(name)

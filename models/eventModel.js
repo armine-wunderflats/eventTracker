@@ -14,15 +14,18 @@ async function createEvent(event, username){
         let name = event.name;
         if(await Event.findEvent(name)){
             throw new EventAlreadyExists(name);
+            return;
         }
         await Users.findOneAndUpdate({username}, {$push: {events: event}});
         const user = await Users.findUsername(username);
         if(!user){
             throw new UserNotFound(username);
+            return;
         }
         await event.save( function (err, event) {
             if(err){ 
                 throw err; 
+                return;
             }
             console.log(name + " event created!");
         });        
@@ -39,6 +42,7 @@ async function getEvent(name) {
         const event = await Event.findEvent(name);
         if(!event){
             throw new EventNotFound(name);
+            return;
         }
         return event;
     }
@@ -48,32 +52,57 @@ async function getEvent(name) {
 }
 
 async function getAllEvents() {
-    console.log("getting all events");
-    return await Event.find({});
-}
-
-async function getMyEvents(username) {
-    console.log("getting my events");
-    const user = await Users.findUsername(username);
-    if(!user){
-        throw new UserNotFound(username);
+    try{
+        console.log("getting all events");
+        return await Event.find({});
     }
-    const events = await Users.findMyEvents(username);
-    const eventIds = events.events;
-    console.log(eventIds);
-    return await Event.findEventsByIds(eventIds);
+    catch(err){
+        throw err;
+    }
+}
+async function getAvailableEvents(username) {
+    try{
+        console.log("getting all events");
+         if(!await Users.findUsername(username)){
+            throw new UserNotFound(username);
+            return;
+        }
+        const events = await Users.findMyEvents(username);
+        const eventIds = events.events;
+        return await Event.find({'_id':{$nin:eventIds}});
+    }
+    catch(err){
+        throw err;
+    }
+}
+async function getMyEvents(username) {
+    try{
+        console.log("getting my events")
+        if(!await Users.findUsername(username)){
+            throw new UserNotFound(username);
+            return;
+        }
+        const events = await Users.findMyEvents(username);
+        const eventIds = events.events;
+        console.log(eventIds);
+        return await Event.findEventsByIds(eventIds);
+    }
+    catch(err){
+        throw err;
+    }
 }
 
 async function addEventToUser(name, username) {
     console.log(`Sharing event ${name} with user ${username}`);
     try{
-        const user = await Users.findUsername(username);
-        if(!user){
+        if(!await Users.findUsername(username)){
             throw new UserNotFound(username);
+            return;
         }
         const event = await Event.findEvent(name);
         if(!event){
             throw new EventNotFound(name);
+            return;
         }
         await Users.findOneAndUpdate({username}, {$push: {events: event}});
 
@@ -88,9 +117,33 @@ async function DeleteEvent(name) {
     console.log("deleting event " + name);
      try{
         const event = await Event.findEvent(name);
+        if(!event){
+            throw new EventNotFound();
+            return;
+        }
         await Event.deleteOne({name});
         await Users.updateMany({events:event._id},{$pull:{events:event._id}});
         console.log(name + " event deleted!");
+    }
+    catch(error){
+        throw error;
+    }
+}
+
+async function removeFromEvents(_id, username) {
+    console.log(`removing event ${_id} for user ${username}`);
+     try{
+        const event = await Event.findSingleEventById(_id);
+        if(!event){
+            throw new EventNotFound();
+            return;
+        }
+        if(!await Users.findUsername(username)){
+            throw new UserNotFound(username);
+            return;
+        }
+        await Users.updateOne({username},{$pull:{events:_id}});
+        console.log(_id + " event removed!");
     }
     catch(error){
         throw new EventNotFound(name);
@@ -102,6 +155,8 @@ module.exports = {
     getEvent,
     getAllEvents,
     getMyEvents,
+    getAvailableEvents,
     addEventToUser,
+    removeFromEvents,
     DeleteEvent
 }

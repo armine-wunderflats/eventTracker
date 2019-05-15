@@ -18,12 +18,13 @@ async function createSchedule(schedule, username){
         let name = schedule.name;
         if(await Schedule.findSchedule(name)){
             throw new ScheduleAlreadyExists();
+            return;
+        }
+        if(!await Users.findUsername(username)){
+            throw new UserNotFound(username);
+            return;
         }
         await Users.findOneAndUpdate({username}, {$push: {schedules: schedule}});
-        const user = await Users.findUsername(username);
-        if(!user){
-            throw new UserNotFound(username);
-        }
         await schedule.save( function (err, schedule) {
             if(err){ 
                 throw err; 
@@ -42,6 +43,7 @@ async function getSchedule(name) {
         const schedule = await Schedule.findSchedule(name);
         if(!schedule){
             throw new ScheduleNotFound(name);
+            return;
         }
         return schedule;
     }
@@ -50,23 +52,71 @@ async function getSchedule(name) {
     }
 }
 async function getAllSchedules() {
-    console.log("getting all schedules");
-    return await Schedule.find({});
+    try{
+        console.log("getting all schedules");
+        return await Schedule.find({});
+    }
+    catch(err){
+        throw err;
+    }
 }
 async function getMySchedules(username) {
     console.log("getting my schedules");
-    const user = await Users.findUsername(username);
-    if(!user){
-        throw new UserNotFound(username);
+    try{
+        if(!await Users.findUsername(username)){
+            throw new UserNotFound(username);
+            return;
+        }
+        const schedules = await Users.findMySchedules(username);
+        const scheduleIds = schedules.schedules;
+        return await Schedule.find({ '_id': { $in : scheduleIds }} );
     }
-    const schedules = await Users.findMySchedules(username);
-    const scheduleIds = schedules.schedules;
-    return await Schedule.find({ '_id': { $in : scheduleIds }} );
+    catch(err){
+        throw err;
+    }
+}
+async function getAvailableSchedules(username) {
+    console.log("getting all schedules");
+    try{
+        if(!await Users.findUsername(username)){
+            throw new UserNotFound(username);
+            return;
+        }
+        const schedules = await Users.findMySchedules(username);
+        const scheduleIds = schedules.schedules;
+        return await Schedule.find({'_id':{$nin:scheduleIds}});
+    }
+    catch(err){
+        throw err;
+    }
+}
+async function addScheduleToUser(name, username) {
+    console.log(`Sharing schedule ${name} with user ${username}`);
+    try{
+        if(!await Users.findUsername(username)){
+            throw new UserNotFound(username);
+            return;
+        }
+        const schedule = await Schedule.findSchedule(name);
+        if(!schedule){
+            throw new ScheduleNotFound(name);
+            return;
+        }
+        await Users.findOneAndUpdate({username}, {$push: {schedules: schedule}});
+
+    }
+    catch(err){
+        throw err;
+    }
 }
 async function deleteSchedule(name) {
     console.log("deleting schedule " + name);
      try{
         const schedule = await Schedule.findSchedule(name);
+        if(!schedule){
+            throw new ScheduleNotFound(name);
+            return;
+        }
         await Schedule.deleteOne({name});
         await Users.updateMany({schedules:schedule._id},{$pull:{schedules:schedule._id}});
         console.log(name + " schedule deleted!");
@@ -75,11 +125,33 @@ async function deleteSchedule(name) {
         throw new ScheduleNotFound(name);
     }
 }
+async function removeFromSchedules(_id, username) {
+    console.log(`removing schedule ${_id} for user ${username}`);
+     try{
+        const schedule = await Schedule.findScheduleById(_id);
+        if(!schedule){
+            throw new ScheduleNotFound(_id);
+            return;
+        }
+        if(!await Users.findUsername(username)){
+            throw new UserNotFound(username);
+            return;
+        }
+        await Users.updateOne({username},{$pull:{schedules:_id}});
+        console.log(_id + " schedule deleted!");
+    }
+    catch(error){
+        throw new ScheduleNotFound(_id);
+    }
+}
 
 module.exports = {
     createSchedule,
     getSchedule,
     getAllSchedules,
     getMySchedules,
+    getAvailableSchedules,
+    addScheduleToUser,
+    removeFromSchedules,
     deleteSchedule
 }

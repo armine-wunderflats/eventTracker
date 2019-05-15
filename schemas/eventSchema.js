@@ -32,6 +32,11 @@ eventSchema.statics.findEventsByIds = function(eventIds){
     console.log(`looking for event list`);
     return Event.find({ '_id': { $in : eventIds } });
 }
+
+eventSchema.statics.findSingleEventById = function(_id){
+    console.log(`looking for event ${_id}`);
+    return Event.find({ _id });
+}
 const Event = mongoose.model('Event', eventSchema);
 
 module.exports = Event;

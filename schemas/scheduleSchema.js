@@ -16,6 +16,10 @@ scheduleSchema.statics.findSchedule = function(name){
     console.log(`looking for shedule ${name}`);
     return Schedule.findOne({name});
 }
+scheduleSchema.statics.findScheduleById = function(_id){
+    console.log(`looking for shedule ${_id}`);
+    return Schedule.findOne({_id});
+}
 
 
 const Schedule = mongoose.model('Schedule', scheduleSchema);

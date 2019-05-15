@@ -8,7 +8,9 @@ const {
     getEvent,
     getAllEvents,
     getMyEvents,
+    getAvailableEvents,
     addEventToUser,
+    removeFromEvents,
     DeleteEvent
 } = require(`${path}/models/eventModel.js`);
 
@@ -56,6 +58,16 @@ router.get('/', async function(req, res, next){
     }
 })
 
+router.get('/all/user/:username', async function(req, res, next){
+    try{
+        res.json(await getAvailableEvents(req.params.username));
+    }
+    catch(err){
+        next(err);
+    }
+})
+
+
 router.get('/:name', async function(req, res, next){
     try{
         res.json(await getEvent(req.params.name));
@@ -91,6 +103,17 @@ router.post('/delete', async function(req, res, next){
         const body = req.body;
         await DeleteEvent(body.name);
         res.status(200).send('event deleted!').end();
+    }
+    catch(err){
+        next(err);
+    }
+})
+router.post('/remove', async function(req, res, next){
+    try{
+        console.log('removing event...');
+        const body = req.body;
+        await removeFromEvents(body.eventId, body.username);
+        res.status(200).send('event removed!').end();
     }
     catch(err){
         next(err);
