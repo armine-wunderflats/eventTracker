@@ -11,6 +11,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 
 app.use('/users', require(`${path}/routes/usersRoutes.js`));
+app.use('/tasks', require(`${path}/routes/taskRoutes.js`));
 app.use('/events', require(`${path}/routes/eventRoutes.js`));
 app.use('/schedules', require(`${path}/routes/scheduleRoutes.js`));
 

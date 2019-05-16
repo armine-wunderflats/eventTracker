@@ -13,7 +13,6 @@ async function login(username, password) {
     let user;
     if(!password || !username){
         throw new UsernameAndPasswordMustBeProvided();
-        return;
     }
     try {
         user =await Users.findUserForLogin(username);
@@ -25,13 +24,11 @@ async function login(username, password) {
         console.log(user);
     }
     catch(error){
-        throw new UserNotFound(username);
-        return;
+        throw error;
     }
 
     if(user.locked) {
         throw new UserIsLocked(username);
-        return;
     }   
 
     if(!user.comparePasswords(password)) {
@@ -51,7 +48,6 @@ async function login(username, password) {
         }
 
         throw new PasswordIncorrect();
-        return;
     }
     
     await Users.findOneAndUpdate({username},{ $set: {failedLoginCount: 0}});

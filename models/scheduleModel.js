@@ -18,11 +18,9 @@ async function createSchedule(schedule, username){
         let name = schedule.name;
         if(await Schedule.findSchedule(name)){
             throw new ScheduleAlreadyExists();
-            return;
         }
         if(!await Users.findUsername(username)){
             throw new UserNotFound(username);
-            return;
         }
         await Users.findOneAndUpdate({username}, {$push: {schedules: schedule}});
         await schedule.save( function (err, schedule) {
@@ -43,7 +41,6 @@ async function getSchedule(name) {
         const schedule = await Schedule.findSchedule(name);
         if(!schedule){
             throw new ScheduleNotFound(name);
-            return;
         }
         return schedule;
     }
@@ -65,7 +62,6 @@ async function getMySchedules(username) {
     try{
         if(!await Users.findUsername(username)){
             throw new UserNotFound(username);
-            return;
         }
         const schedules = await Users.findMySchedules(username);
         const scheduleIds = schedules.schedules;
@@ -80,7 +76,6 @@ async function getAvailableSchedules(username) {
     try{
         if(!await Users.findUsername(username)){
             throw new UserNotFound(username);
-            return;
         }
         const schedules = await Users.findMySchedules(username);
         const scheduleIds = schedules.schedules;
@@ -95,12 +90,10 @@ async function addScheduleToUser(name, username) {
     try{
         if(!await Users.findUsername(username)){
             throw new UserNotFound(username);
-            return;
         }
         const schedule = await Schedule.findSchedule(name);
         if(!schedule){
             throw new ScheduleNotFound(name);
-            return;
         }
         await Users.findOneAndUpdate({username}, {$push: {schedules: schedule}});
 
@@ -115,7 +108,6 @@ async function deleteSchedule(name) {
         const schedule = await Schedule.findSchedule(name);
         if(!schedule){
             throw new ScheduleNotFound(name);
-            return;
         }
         await Schedule.deleteOne({name});
         await Users.updateMany({schedules:schedule._id},{$pull:{schedules:schedule._id}});
@@ -131,11 +123,9 @@ async function removeFromSchedules(_id, username) {
         const schedule = await Schedule.findScheduleById(_id);
         if(!schedule){
             throw new ScheduleNotFound(_id);
-            return;
         }
         if(!await Users.findUsername(username)){
             throw new UserNotFound(username);
-            return;
         }
         await Users.updateOne({username},{$pull:{schedules:_id}});
         console.log(_id + " schedule deleted!");

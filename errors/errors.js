@@ -11,6 +11,12 @@ class UsernameAndPasswordMustBeProvided extends Error {
     }
 }
 
+class UsernameMustBeProvided extends Error {
+    constructor() {
+        super('Both username must be provided!');
+    }
+}
+
 class UserAlreadyExists extends Error {
     constructor(username) {
         super(`User ${username} already exists!`);
@@ -69,6 +75,7 @@ module.exports = {
     UserAlreadyExists,
     PasswordIncorrect,
     UsernameAndPasswordMustBeProvided,
+    UsernameMustBeProvided,
     EventAlreadyExists,
     TaskAlreadyExists,
     ScheduleAlreadyExists,

@@ -5,22 +5,30 @@ const Users = require(`${path}/schemas/usersSchema.js`);
 const taskSchema = new mongoose.Schema({
     name: {
         type: String,
-        lowercase: true,
         required: [true, 'Task Name is required!'],
         trim: true,
-        unique: true,
-        validate: {
-            validator: function(v){
-                return v.length >= 4;
-            },
-            message: 'Invalid Task Name!'
-        }
+        unique: true
     },
     deadline: Date,
     reminder: Date,
     location: String,
     description: String
 });
+
+taskSchema.statics.findTask = function(name){
+    console.log(`looking for task ${name}`);
+    return Task.findOne({name});
+}
+
+taskSchema.statics.findTasksByIds = function(taskIds){
+    console.log(`looking for task list`);
+    return Task.find({ '_id': { $in : taskIds } });
+}
+
+taskSchema.statics.findSingleTaskById = function(_id){
+    console.log(`looking for task ${_id}`);
+    return Task.find({ _id });
+}
 
 const Task = mongoose.model('Task', taskSchema);
 
