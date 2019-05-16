@@ -28,7 +28,7 @@
                         </ul>
                         <div class="panel-footer">
                             <h3 id="event_toggle" class="button btn btn-success w-100" >Add New Event</h3>
-                            <form id="event-form">
+                            <form id="event_form">
                                 <p>
                                     <label for="event_name" class="w-100">Event Name<br>
                                     <input type="text" name="event_name" id="event_name" class="input w-100" value="" autocapitalize="off" required></label>
@@ -74,12 +74,37 @@
                 <div id="collapse2" class="panel-collapse collapse">
                     <div class="panel-body">
                         <ul class="list-group" id="task_list">
-                            <li class="list-group-item">One</li>
-                            <li class="list-group-item">Two</li>
-                            <li class="list-group-item">Three</li>
                         </ul>
                         <div class="panel-footer">
                             <h3 id="task_toggle" class="button btn btn-success w-100" >Add New Task</h3>
+                            <form id="task_form">
+                                <p>
+                                    <label for="task_name" class="w-100">Task Name<br>
+                                    <input type="text" name="task_name" id="task_name" class="input w-100" value="" autocapitalize="off" required></label>
+                                </p>
+                                <p>
+                                    <label for="task_deadline" class="w-100">Task Deadline<br>
+                                    <input type="text" name="task_deadline" id="task_deadline" class="input w-100" value=""></label>
+                                </p>
+                                <p>
+                                    <label for="task_reminder" class="w-100">Task Reminder<br>
+                                    <input type="text" name="task_reminder" id="task_reminder" class="input w-100" value=""></label>
+                                </p>
+                                <p>
+                                    <label for="task_location" class="w-100">Task Location<br>
+                                    <input type="text" name="task_location" id="task_location" class="input w-100" value=""></label>
+                                </p>
+                                <p>
+                                    <label for="task_desc" class="w-100">Task Description<br>
+                                    <textarea name="task_desc" id="task_desc" class="input w-100" value=""></textarea>
+                                </p>
+                                <p>
+                                    <input type="submit" name="submit" id="add_task" class="button btn btn-success w-100" value="Add Task">
+                                </p> 
+                                <p>
+                                    <input type="button" name="cancel" id="cancel_task" class="button btn btn-danger w-100" value="Cancel">
+                                </p> 
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -145,13 +170,7 @@
                     <div id="all_collapse2" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="list-group" id="all_tasks_list">
-                                <li class="list-group-item">One</li>
-                                <li class="list-group-item">Two</li>
-                                <li class="list-group-item">Three</li>
                             </ul>
-                            <div class="panel-footer">
-                                <h3 id="task_toggle" class="button btn btn-success w-100" >Add New Task</h3>
-                            </div>
                         </div>
                     </div>
                 </div>

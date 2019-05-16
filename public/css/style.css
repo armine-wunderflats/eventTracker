@@ -19,10 +19,10 @@ h2.panel-title:hover {
 h2.panel-title:hover a{
     color: #222;
 }
-#signup-form, #event-form, #schedule_form, #task-form{
+#signup-form, #event_form, #schedule_form, #task_form{
     display: none;
 }
-#event-form, #event-form, #schedule_form, #task-form{
+#event_form, #schedule_form, #task_form{
     width: 200px;
     margin: 35px auto;
 }

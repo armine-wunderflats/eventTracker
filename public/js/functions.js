@@ -108,6 +108,40 @@ $(document).ready(function() {
             
 
         });
+
+        $.get(`/tasks/user/${username}`, function(data) {
+        
+            $('#task_list').html(
+                data.map(function(single){
+                    let result = `<li class="list-group-item">
+                    <h3>${single.name}</h3>
+                    <span style="display: none;">${single._id}</span>`
+                    if(single.deadline){
+                        result += `<p><strong>Deadline: </strong>${single.deadline}</p>`;
+                    }
+                    if(single.location){
+                        result += `<p><strong>Location: </strong>${single.location}</p>`;
+                    }
+                    if(single.description){
+                        result += `<p><strong>Description: </strong>${single.description}</p>`;
+                    }
+                    if(single.reminder){
+                        result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                    }
+                    result += `
+                    <p class="delete_task">
+                        <input type="submit" name="delete" class="button btn btn-danger" value="Delete Task">
+                    </p>
+                    <p class="remove_task">
+                        <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Tasks">
+                    </p>
+                    </li>`;
+                    return result;
+                })
+            );
+            
+
+        });
         
         $.get(`/schedules/user/${username}`, function(data) {
         
@@ -167,6 +201,37 @@ $(document).ready(function() {
                 
 
         });
+        
+        $.get(`/tasks/all/user/${username}`, function(data) {
+        
+            $('#all_tasks_list').html(
+                data.map(function(single){
+                    let result = `<li class="list-group-item">
+                    <h3>${single.name}</h3>
+                    <span style="display: none;">${single._id}</span>`
+                    if(single.deadline){
+                        result += `<p><strong>Deadline: </strong>${single.deadline}</p>`;
+                    }
+                    if(single.location){
+                        result += `<p><strong>Location: </strong>${single.location}</p>`;
+                    }
+                    if(single.description){
+                        result += `<p><strong>Description: </strong>${single.description}</p>`;
+                    }
+                    if(single.reminder){
+                        result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                    }
+                    result += `
+                    <p class="add_task">
+                        <input type="submit" name="add" class="button btn btn-warning" value="Add To My Events">
+                    </p>
+                    </li>`;
+                    return result;
+                })
+            );
+                
+
+        });
 
         $.get(`/schedules/all/${username}`, function(data) {
         
@@ -195,8 +260,13 @@ $(document).ready(function() {
     
     //open and close creation forms
     $('#event_toggle').click(()=>{
-        $('#event-form').show();
+        $('#event_form').show();
         $('#event_toggle').hide();
+    });
+    
+    $('#task_toggle').click(()=>{
+        $('#task_form').show();
+        $('#task_toggle').hide();
     });
 
     $('#schedule_toggle').click(()=>{
@@ -205,7 +275,7 @@ $(document).ready(function() {
     });
 
     //submit creation form
-    $('#event-form').submit((event)=>{
+    $('#event_form').submit((event)=>{
         event.preventDefault();
         const name = $('#event_name').val();
         const date = $('#event_date').val();
@@ -221,7 +291,7 @@ $(document).ready(function() {
             $('#event_venue').val('');
             $('#event_price').val('');
             $('#event_desc').val('');
-            $('#event-form').hide();
+            $('#event_form').hide();
             $('#event_toggle').show();
             let result = `<li class="list-group-item"><h3>${name}</h3>`;
             if(date){
@@ -242,8 +312,50 @@ $(document).ready(function() {
             result += `<p class="delete_event">
                     <input type="submit" name="delete" class="button btn btn-danger" value="Delete Event">
                 </p>
+                <p class="remove_event">
+                    <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Events">
+                </p>
                 </li>`;
             $('#events_list').append(result);
+        });
+    });
+    $('#task_form').submit((task)=>{
+        task.preventDefault();
+        const name = $('#task_name').val();
+        const deadline = $('#task_deadline').val();
+        const reminder = $('#task_reminder').val();
+        const location = $('#task_location').val();
+        const description = $('#task_desc').val();
+        const username = getCookie('username');
+        $.post("/tasks", {name, deadline, reminder, location, description, username},  function(data) {
+            $('#task_name').val('');
+            $('#task_deadline').val('');
+            $('#task_reminder').val('');
+            $('#task_location').val('');
+            $('#task_desc').val('');
+            $('#task_form').hide();
+            $('#task_toggle').show();
+            let result = `<li class="list-group-item"><h3>${name}</h3>`;
+            if(deadline){
+                result += `<p><strong>Deadline: </strong>${deadline}</p>`;
+            }
+            if(location){
+                result += `<p><strong>Location: </strong>${location}</p>`;
+            }
+            if(description){
+                result += `<p><strong>Description: </strong>${description}</p>`;
+            }
+            if(reminder){
+                result += `<p><strong>Reminder on: </strong>${reminder}</p>`;
+            }
+            result += `<p class="delete_task">
+                    <input type="submit" name="delete" class="button btn btn-danger" value="Delete Task">
+                </p>
+                <p class="remove_task">
+                    <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Tasks">
+                </p>
+                </li>`;
+            $('#task_list').append(result);
         });
     });
     $('#schedule_form').submit((event)=>{
@@ -263,6 +375,9 @@ $(document).ready(function() {
             result += `<p class="delete_schedule">
                     <input type="submit" name="delete" class="button btn btn-danger" value="Delete Event">
                 </p>
+                <p class="remove_schedule">
+                    <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Schedules">
+                </p>
                 </li>`;
             $('#schedule_list').append(result);
         });
@@ -276,8 +391,18 @@ $(document).ready(function() {
         $('#event_venue').val('');
         $('#event_price').val('');
         $('#event_desc').val('');
-        $('#event-form').hide();
+        $('#event_form').hide();
         $('#event_toggle').show();
+
+    });
+    $('#cancel_task').click(()=>{
+        $('#task_name').val('');
+        $('#task_deadline').val('');
+        $('#task_reminder').val('');
+        $('#task_location').val('');
+        $('#task_desc').val('');
+        $('#task_form').hide();
+        $('#task_toggle').show();
 
     });
     $('#cancel_schedule').click(()=>{
@@ -293,6 +418,13 @@ $(document).ready(function() {
         let name = $(this).parent().find('h3').get( 0 ).innerHTML;
         $(this).parent().css("display", "none");
         $.post("/events/delete", {name},  function(data) {
+            
+        });
+    });
+    $(document).on('click','.delete_task', function(){
+        let name = $(this).parent().find('h3').get( 0 ).innerHTML;
+        $(this).parent().css("display", "none");
+        $.post("/tasks/delete", {name},  function(data) {
             
         });
     });
@@ -339,6 +471,41 @@ $(document).ready(function() {
         });
         $(this).parent().css("display", "none");
         $.post("/events/add", {eventname, username},  function(data) {
+            
+        });
+    });
+
+    $(document).on('click','.add_task', function(){
+        let username = getCookie('username');
+        let taskname = $(this).parent().find('h3').get( 0 ).innerHTML;
+        $.get(`/tasks/${taskname}`, function(single) {
+            let result = `<li class="list-group-item">
+            <h3>${single.name}</h3>
+            <span style="display: none;">${single._id}</span>`
+            if(single.deadline){
+                result += `<p><strong>Deadline: </strong>${single.deadline}</p>`;
+            }
+            if(single.location){
+                result += `<p><strong>Location: </strong>${single.location}</p>`;
+            }
+            if(single.description){
+                result += `<p><strong>Description: </strong>${single.description}</p>`;
+            }
+            if(single.reminder){
+                result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+            }
+            result += `
+            <p class="delete_task">
+                <input type="submit" name="delete" class="button btn btn-danger" value="Delete Task">
+            </p>
+            <p class="remove_task">
+                <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Tasks">
+            </p>
+            </li>`;
+            $('#task_list').append(result);
+        });
+        $(this).parent().css("display", "none");
+        $.post("/tasks/add", {taskname, username},  function(data) {
             
         });
     });
@@ -402,6 +569,38 @@ $(document).ready(function() {
         });
         $(this).parent().css("display", "none");
         $.post("/events/remove", {eventId, username},  function(data) {
+            
+        });
+    });
+    $(document).on('click','.remove_task', function(){
+        let username = getCookie('username');
+        let taskId = $(this).parent().find('span').get( 0 ).innerHTML;
+        let taskname = $(this).parent().find('h3').get( 0 ).innerHTML;
+        $.get(`/tasks/${taskname}`, function(single) {
+            let result = `<li class="list-group-item">
+            <h3>${single.name}</h3>
+            <span style="display: none;">${single._id}</span>`
+            if(single.deadline){
+                result += `<p><strong>Deadline: </strong>${single.deadline}</p>`;
+            }
+            if(single.location){
+                result += `<p><strong>Location: </strong>${single.location}</p>`;
+            }
+            if(single.description){
+                result += `<p><strong>Description: </strong>${single.description}</p>`;
+            }
+            if(single.reminder){
+                result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+            }
+            result += `
+            <p class="add_task">
+                <input type="submit" name="add" class="button btn btn-warning" value="Add To My Tasks">
+            </p>
+            </li>`;
+            $('#all_tasks_list').append(result);
+        });
+        $(this).parent().css("display", "none");
+        $.post("/tasks/remove", {taskId, username},  function(data) {
             
         });
     });
