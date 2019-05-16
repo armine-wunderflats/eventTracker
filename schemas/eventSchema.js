@@ -5,24 +5,16 @@ const Users = require(`${path}/schemas/usersSchema.js`);
 const eventSchema = new mongoose.Schema({
     name: {
         type: String,
-        lowercase: true,
         required: [true, 'Event Name is required!'],
         trim: true,
-        validate: {
-            validator: function(v){
-                return v.length >= 4;
-            },
-            message: 'Invalid Event Name!'
-        }
+        unique: true
     },
     host: {
-        type: String,
-        ref: Users
+        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
     },
-    date: {
-        type: Date,
-        required: [true, 'Event Date is required!'],
-    },
+    date: Date,
     reminder: Date,
     venue: String,
     price: String,
@@ -30,6 +22,21 @@ const eventSchema = new mongoose.Schema({
 
 });
 
+
+eventSchema.statics.findEvent = function(name){
+    console.log(`looking for event ${name}`);
+    return Event.findOne({name});
+}
+
+eventSchema.statics.findEventsByIds = function(eventIds){
+    console.log(`looking for event list`);
+    return Event.find({ '_id': { $in : eventIds } });
+}
+
+eventSchema.statics.findSingleEventById = function(_id){
+    console.log(`looking for event ${_id}`);
+    return Event.find({ _id });
+}
 const Event = mongoose.model('Event', eventSchema);
 
 module.exports = Event;
