@@ -109,7 +109,7 @@ function mySchedules(username){
                     result += `<p><strong>Description: </strong>${single.description}</p>`;
                 }
                 result += `
-                <p class="delete_shedule">
+                <p class="delete_schedule">
                     <input type="submit" name="delete" class="button btn btn-danger" value="Delete Schedule">
                 </p>
                 <p class="remove_schedule">
@@ -465,7 +465,9 @@ $(document).ready(function() {
         });
     });
     $(document).on('click','.delete_schedule', function(){
+        console.log('here');
         let name = $(this).parent().find('h3').get( 0 ).innerHTML;
+        console.log(name);
         $(this).parent().css("display", "none");
         $.post("/schedule/delete", {name},  function(data) {
             
@@ -563,7 +565,7 @@ $(document).ready(function() {
                 result += `<p><strong>Description: </strong>${single.description}</p>`;
             }
             result += `
-            <p class="delete_shedule">
+            <p class="delete_schedule">
                 <input type="submit" name="delete" class="button btn btn-danger" value="Delete Schedule">
             </p>
             <p class="remove_schedule">
