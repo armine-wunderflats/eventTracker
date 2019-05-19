@@ -15,6 +15,216 @@ function getCookie(cname) {
   }
   return "";
 }
+function myEvents(username){
+    $.get(`/events/user/${username}`, function(data) {
+        $('#events_list').html(
+            data.map(function(single){
+                let result = `<li class="list-group-item">
+                <h3>${single.name}</h3>
+                <span style="display: none;">${single._id}</span>`
+                if(single.date){
+                    result += `<p><strong>On: </strong>${new Date(single.date)}</p>`;
+                }
+                if(single.host){
+                    result += `<p class="${single.host}"><strong>Hosted By: </strong><span class="host">${single.host}</span></p>`;
+                }
+                if(single.venue){
+                    result += `<p><strong>Venue: </strong>${single.venue}</p>`;
+                }
+                if(single.price){
+                    result += `<p><strong>Price: </strong>${single.price}</p>`;
+                }
+                if(single.description){
+                    result += `<p><strong>Description: </strong>${single.description}</p>`;
+                }
+                if(single.reminder){
+                    result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
+                }
+                result += `
+                <p class="delete_event">
+                    <input type="submit" name="delete" class="button btn btn-danger" value="Delete Event">
+                </p>
+                <p class="remove_event">
+                    <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Events">
+                </p>
+                </li>`;
+                return result;
+            })
+        );
+        let hosts = document.getElementsByClassName('host');
+        Array.from(hosts).forEach((host) => {
+            let _id = host.innerHTML; 
+            $.get(`/users/id/${_id}`, function(data){
+            $(`.${_id}`).each(function(){
+                $(this).find('span').html(data.username);
+            })
+            });
+                
+        });
+
+    });
+}
+function myTasks(username){
+    $.get(`/tasks/user/${username}`, function(data) {
+        $('#task_list').html(
+            data.map(function(single){
+                let result = `<li class="list-group-item">
+                <h3>${single.name}</h3>
+                <span style="display: none;">${single._id}</span>`
+                if(single.deadline){
+                    result += `<p><strong>Deadline: </strong>${new Date(single.deadline)}</p>`;
+                }
+                if(single.location){
+                    result += `<p><strong>Location: </strong>${single.location}</p>`;
+                }
+                if(single.description){
+                    result += `<p><strong>Description: </strong>${single.description}</p>`;
+                }
+                if(single.reminder){
+                    result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
+                }
+                result += `
+                <p class="delete_task">
+                    <input type="submit" name="delete" class="button btn btn-danger" value="Delete Task">
+                </p>
+                <p class="remove_task">
+                    <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Tasks">
+                </p>
+                </li>`;
+                return result;
+            })
+        );
+        
+
+    });
+}
+function mySchedules(username){
+    $.get(`/schedules/user/${username}`, function(data) {
+        $('#schedule_list').html(
+            data.map(function(single){
+                let result = `<li class="list-group-item">
+                <h3>${single.name}</h3>
+                <span style="display: none;">${single._id}</span>`
+                if(single.description){
+                    result += `<p><strong>Description: </strong>${single.description}</p>`;
+                }
+                result += `
+                <p class="delete_shedule">
+                    <input type="submit" name="delete" class="button btn btn-danger" value="Delete Schedule">
+                </p>
+                <p class="remove_schedule">
+                    <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Schedules">
+                </p>
+                </li>`;
+                return result;
+            })
+        );
+        
+
+    });
+}
+function availableEvents(username){
+    $.get(`/events/all/user/${username}`, function(data) {
+        $('#all_events_list').html(
+            data.map(function(single){
+                let result = `<li class="list-group-item">
+                <h3>${single.name}</h3>
+                <span style="display: none;">${single._id}</span>`
+                if(single.date){
+                    result += `<p><strong>On: </strong>${new Date(single.date)}</p>`;
+                }
+                if(single.host){
+                    result += `<p class="${single.host}"><strong>Hosted By: </strong><span class="host">${single.host}</span></p>`;
+                }
+                if(single.venue){
+                    result += `<p><strong>Venue: </strong>${single.venue}</p>`;
+                }
+                if(single.price){
+                    result += `<p><strong>Price: </strong>${single.price}</p>`;
+                }
+                if(single.description){
+                    result += `<p><strong>Description: </strong>${single.description}</p>`;
+                }
+                if(single.reminder){
+                    result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
+                }
+                result += `
+                <p class="add_event">
+                    <input type="submit" name="add" class="button btn btn-warning" value="Add To My Events">
+                </p>
+                </li>`;
+                return result;
+            })
+            
+        );
+        let hosts = document.getElementsByClassName('host');
+        Array.from(hosts).forEach((host) => {
+            let _id = host.innerHTML; 
+            $.get(`/users/id/${_id}`, function(data){
+            $(`.${_id}`).each(function(){
+                $(this).find('span').html(data.username);
+            })
+            });
+                
+        }); 
+            
+
+    });
+}
+function availableTasks(username){
+    $.get(`/tasks/all/user/${username}`, function(data) {
+        $('#all_tasks_list').html(
+            data.map(function(single){
+                let result = `<li class="list-group-item">
+                <h3>${single.name}</h3>
+                <span style="display: none;">${single._id}</span>`
+                if(single.deadline){
+                    result += `<p><strong>Deadline: </strong>${new Date(single.deadline)}</p>`;
+                }
+                if(single.location){
+                    result += `<p><strong>Location: </strong>${single.location}</p>`;
+                }
+                if(single.description){
+                    result += `<p><strong>Description: </strong>${single.description}</p>`;
+                }
+                if(single.reminder){
+                    result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
+                }
+                result += `
+                <p class="add_task">
+                    <input type="submit" name="add" class="button btn btn-warning" value="Add To My Events">
+                </p>
+                </li>`;
+                return result;
+            })
+        );
+            
+
+    });
+}
+function availableSchedules(username){
+    $.get(`/schedules/all/${username}`, function(data) {
+        $('#all_schedules_list').html(
+            data.map(function(single){
+                let result = `<li class="list-group-item">
+                <h3>${single.name}</h3>
+                <span style="display: none;">${single._id}</span>`
+                if(single.description){
+                    result += `<p><strong>Description: </strong>${single.description}</p>`;
+                }
+                result += `
+                <p class="add_schedule">
+                    <input type="submit" name="add" class="button btn btn-warning" value="Add To My Schedules">
+                </p>
+                </li>`;
+                return result;
+            })
+        );
+        
+
+    });
+}
+
 $(document).ready(function() {
 
     // handle login/signup page
@@ -72,188 +282,12 @@ $(document).ready(function() {
 
     //load data into each panel
     if(username){
-        $.get(`/events/user/${username}`, function(data) {
-        
-            $('#events_list').html(
-                data.map(function(single){
-                    let result = `<li class="list-group-item">
-                    <h3>${single.name}</h3>
-                    <span style="display: none;">${single._id}</span>`
-                    if(single.date){
-                        result += `<p><strong>On: </strong>${new Date(single.date)}</p>`;
-                    }
-                    if(single.venue){
-                        result += `<p><strong>Venue: </strong>${single.venue}</p>`;
-                    }
-                    if(single.price){
-                        result += `<p><strong>Price: </strong>${single.price}</p>`;
-                    }
-                    if(single.description){
-                        result += `<p><strong>Description: </strong>${single.description}</p>`;
-                    }
-                    if(single.reminder){
-                        result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
-                    }
-                    result += `
-                    <p class="delete_event">
-                        <input type="submit" name="delete" class="button btn btn-danger" value="Delete Event">
-                    </p>
-                    <p class="remove_event">
-                        <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Events">
-                    </p>
-                    </li>`;
-                    return result;
-                })
-            );
-            
-
-        });
-
-        $.get(`/tasks/user/${username}`, function(data) {
-        
-            $('#task_list').html(
-                data.map(function(single){
-                    let result = `<li class="list-group-item">
-                    <h3>${single.name}</h3>
-                    <span style="display: none;">${single._id}</span>`
-                    if(single.deadline){
-                        result += `<p><strong>Deadline: </strong>${new Date(single.deadline)}</p>`;
-                    }
-                    if(single.location){
-                        result += `<p><strong>Location: </strong>${single.location}</p>`;
-                    }
-                    if(single.description){
-                        result += `<p><strong>Description: </strong>${single.description}</p>`;
-                    }
-                    if(single.reminder){
-                        result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
-                    }
-                    result += `
-                    <p class="delete_task">
-                        <input type="submit" name="delete" class="button btn btn-danger" value="Delete Task">
-                    </p>
-                    <p class="remove_task">
-                        <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Tasks">
-                    </p>
-                    </li>`;
-                    return result;
-                })
-            );
-            
-
-        });
-        
-        $.get(`/schedules/user/${username}`, function(data) {
-        
-            $('#schedule_list').html(
-                data.map(function(single){
-                    let result = `<li class="list-group-item">
-                    <h3>${single.name}</h3>
-                    <span style="display: none;">${single._id}</span>`
-                    if(single.description){
-                        result += `<p><strong>Description: </strong>${single.description}</p>`;
-                    }
-                    result += `
-                    <p class="delete_shedule">
-                        <input type="submit" name="delete" class="button btn btn-danger" value="Delete Schedule">
-                    </p>
-                    <p class="remove_schedule">
-                        <input type="submit" name="remove" class="button btn btn-warning" value="Remove From My Schedules">
-                    </p>
-                    </li>`;
-                    return result;
-                })
-            );
-            
-
-        });
-        
-        $.get(`/events/all/user/${username}`, function(data) {
-        
-            $('#all_events_list').html(
-                data.map(function(single){
-                    let result = `<li class="list-group-item">
-                    <h3>${single.name}</h3>
-                    <span style="display: none;">${single._id}</span>`
-                    if(single.date){
-                        result += `<p><strong>On: </strong>${new Date(single.date)}</p>`;
-                    }
-                    if(single.venue){
-                        result += `<p><strong>Venue: </strong>${single.venue}</p>`;
-                    }
-                    if(single.price){
-                        result += `<p><strong>Price: </strong>${single.price}</p>`;
-                    }
-                    if(single.description){
-                        result += `<p><strong>Description: </strong>${single.description}</p>`;
-                    }
-                    if(single.reminder){
-                        result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
-                    }
-                    result += `
-                    <p class="add_event">
-                        <input type="submit" name="add" class="button btn btn-warning" value="Add To My Events">
-                    </p>
-                    </li>`;
-                    return result;
-                })
-            );
-                
-
-        });
-        
-        $.get(`/tasks/all/user/${username}`, function(data) {
-        
-            $('#all_tasks_list').html(
-                data.map(function(single){
-                    let result = `<li class="list-group-item">
-                    <h3>${single.name}</h3>
-                    <span style="display: none;">${single._id}</span>`
-                    if(single.deadline){
-                        result += `<p><strong>Deadline: </strong>${new Date(single.deadline)}</p>`;
-                    }
-                    if(single.location){
-                        result += `<p><strong>Location: </strong>${single.location}</p>`;
-                    }
-                    if(single.description){
-                        result += `<p><strong>Description: </strong>${single.description}</p>`;
-                    }
-                    if(single.reminder){
-                        result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
-                    }
-                    result += `
-                    <p class="add_task">
-                        <input type="submit" name="add" class="button btn btn-warning" value="Add To My Events">
-                    </p>
-                    </li>`;
-                    return result;
-                })
-            );
-                
-
-        });
-
-        $.get(`/schedules/all/${username}`, function(data) {
-        
-            $('#all_schedules_list').html(
-                data.map(function(single){
-                    let result = `<li class="list-group-item">
-                    <h3>${single.name}</h3>
-                    <span style="display: none;">${single._id}</span>`
-                    if(single.description){
-                        result += `<p><strong>Description: </strong>${single.description}</p>`;
-                    }
-                    result += `
-                    <p class="add_schedule">
-                        <input type="submit" name="add" class="button btn btn-warning" value="Add To My Schedules">
-                    </p>
-                    </li>`;
-                    return result;
-                })
-            );
-            
-
-        });
+        myEvents(username);
+        myTasks(username);
+        mySchedules(username);
+        availableEvents(username);
+        availableTasks(username);
+        availableSchedules(username);
     }
 
         
@@ -297,6 +331,8 @@ $(document).ready(function() {
             if(date){
                 result += `<p><strong>On: </strong>${new Date(date)}</p>`;
             }
+            result += `<p><strong>Hosted By: </strong>${host}</p>`;
+            
             if(venue){
                 result += `<p><strong>Venue: </strong>${venue}</p>`;
             }
@@ -440,12 +476,18 @@ $(document).ready(function() {
     $(document).on('click','.add_event', function(){
         let username = getCookie('username');
         let eventname = $(this).parent().find('h3').get( 0 ).innerHTML;
+        let host = $(this).parent().find('.host').get( 0 ).innerHTML;
+        document.cookie = "host=" + host;
         $.get(`/events/${eventname}`, function(single) {
+            let host = getCookie('host');
             let result = `<li class="list-group-item">
             <h3>${single.name}</h3>
             <span style="display: none;">${single._id}</span>`
             if(single.date){
                 result += `<p><strong>On: </strong>${new Date(single.date)}</p>`;
+            }
+            if(single.host){
+                result += `<p class="${single.host}"><strong>Hosted By: </strong><span class="host">${host}</span></p>`;
             }
             if(single.venue){
                 result += `<p><strong>Venue: </strong>${single.venue}</p>`;
@@ -541,12 +583,18 @@ $(document).ready(function() {
         let username = getCookie('username');
         let eventId = $(this).parent().find('span').get( 0 ).innerHTML;
         let eventname = $(this).parent().find('h3').get( 0 ).innerHTML;
+        let host = $(this).parent().find('.host').get( 0 ).innerHTML;
+        document.cookie = "host=" + host;
         $.get(`/events/${eventname}`, function(single) {
+            let host = getCookie('host');
             let result = `<li class="list-group-item">
             <h3>${single.name}</h3>
             <span style="display: none;">${single._id}</span>`
             if(single.date){
                 result += `<p><strong>On: </strong>${new Date(single.date)}</p>`;
+            }
+            if(single.host){
+                result += `<p class="${single.host}"><strong>Hosted By: </strong><span class="host">${host}</span></p>`;
             }
             if(single.venue){
                 result += `<p><strong>Venue: </strong>${single.venue}</p>`;
