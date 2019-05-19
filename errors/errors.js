@@ -61,6 +61,11 @@ class ScheduleNotFound extends Error {
         super(`Schedule ${name} was not found!`);
     }
 }
+class DateNotValid extends Error {
+    constructor(name){
+        super(`The provided value for ${name} is not a valid Date`);
+    }
+}
 
 
 
@@ -76,5 +81,6 @@ module.exports = {
     TaskNotFound,
     ScheduleNotFound,
     ValidationError, 
+    DateNotValid,
     UserIsLocked 
 }

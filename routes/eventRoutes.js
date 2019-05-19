@@ -14,6 +14,7 @@ const {
     DeleteEvent
 } = require(`${path}/models/eventModel.js`);
 
+const { DateNotValid } = require(`${path}/errors/errors.js`);
 const {
     getUser
 } = require(`${path}/models/usersModel.js`);
@@ -25,11 +26,17 @@ router.post('/', async function(req, res, next) {
         const host = await getUser(body.host);
         let date='';
         if(body.date){
-            date = new Date(body.date);
+            date = Date.parse(body.date);
+            if(!date){
+                throw new DateNotValid('date');
+            }
         }
         let reminder = '';
         if(body.reminder){
-            reminder = new Date(body.reminder);
+            reminder = Date.parse(body.reminder);
+            if(!reminder){
+                throw new DateNotValid('reminder');
+            }
         }
         const event = new Event({
             name: body.name,

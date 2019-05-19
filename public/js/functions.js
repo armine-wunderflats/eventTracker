@@ -80,7 +80,7 @@ $(document).ready(function() {
                     <h3>${single.name}</h3>
                     <span style="display: none;">${single._id}</span>`
                     if(single.date){
-                        result += `<p><strong>On: </strong>${single.date}</p>`;
+                        result += `<p><strong>On: </strong>${new Date(single.date)}</p>`;
                     }
                     if(single.venue){
                         result += `<p><strong>Venue: </strong>${single.venue}</p>`;
@@ -92,7 +92,7 @@ $(document).ready(function() {
                         result += `<p><strong>Description: </strong>${single.description}</p>`;
                     }
                     if(single.reminder){
-                        result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                        result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
                     }
                     result += `
                     <p class="delete_event">
@@ -117,7 +117,7 @@ $(document).ready(function() {
                     <h3>${single.name}</h3>
                     <span style="display: none;">${single._id}</span>`
                     if(single.deadline){
-                        result += `<p><strong>Deadline: </strong>${single.deadline}</p>`;
+                        result += `<p><strong>Deadline: </strong>${new Date(single.deadline)}</p>`;
                     }
                     if(single.location){
                         result += `<p><strong>Location: </strong>${single.location}</p>`;
@@ -126,7 +126,7 @@ $(document).ready(function() {
                         result += `<p><strong>Description: </strong>${single.description}</p>`;
                     }
                     if(single.reminder){
-                        result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                        result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
                     }
                     result += `
                     <p class="delete_task">
@@ -176,7 +176,7 @@ $(document).ready(function() {
                     <h3>${single.name}</h3>
                     <span style="display: none;">${single._id}</span>`
                     if(single.date){
-                        result += `<p><strong>On: </strong>${single.date}</p>`;
+                        result += `<p><strong>On: </strong>${new Date(single.date)}</p>`;
                     }
                     if(single.venue){
                         result += `<p><strong>Venue: </strong>${single.venue}</p>`;
@@ -188,7 +188,7 @@ $(document).ready(function() {
                         result += `<p><strong>Description: </strong>${single.description}</p>`;
                     }
                     if(single.reminder){
-                        result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                        result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
                     }
                     result += `
                     <p class="add_event">
@@ -210,7 +210,7 @@ $(document).ready(function() {
                     <h3>${single.name}</h3>
                     <span style="display: none;">${single._id}</span>`
                     if(single.deadline){
-                        result += `<p><strong>Deadline: </strong>${single.deadline}</p>`;
+                        result += `<p><strong>Deadline: </strong>${new Date(single.deadline)}</p>`;
                     }
                     if(single.location){
                         result += `<p><strong>Location: </strong>${single.location}</p>`;
@@ -219,7 +219,7 @@ $(document).ready(function() {
                         result += `<p><strong>Description: </strong>${single.description}</p>`;
                     }
                     if(single.reminder){
-                        result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                        result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
                     }
                     result += `
                     <p class="add_task">
@@ -295,7 +295,7 @@ $(document).ready(function() {
             $('#event_toggle').show();
             let result = `<li class="list-group-item"><h3>${name}</h3>`;
             if(date){
-                result += `<p><strong>On: </strong>${date}</p>`;
+                result += `<p><strong>On: </strong>${new Date(date)}</p>`;
             }
             if(venue){
                 result += `<p><strong>Venue: </strong>${venue}</p>`;
@@ -307,7 +307,7 @@ $(document).ready(function() {
                 result += `<p><strong>Description: </strong>${description}</p>`;
             }
             if(reminder){
-                result += `<p><strong>Reminder on: </strong>${reminder}</p>`;
+                result += `<p><strong>Reminder on: </strong>${new Date(reminder)}</p>`;
             }
             result += `<p class="delete_event">
                     <input type="submit" name="delete" class="button btn btn-danger" value="Delete Event">
@@ -337,7 +337,7 @@ $(document).ready(function() {
             $('#task_toggle').show();
             let result = `<li class="list-group-item"><h3>${name}</h3>`;
             if(deadline){
-                result += `<p><strong>Deadline: </strong>${deadline}</p>`;
+                result += `<p><strong>Deadline: </strong>${new Date(deadline)}</p>`;
             }
             if(location){
                 result += `<p><strong>Location: </strong>${location}</p>`;
@@ -346,7 +346,7 @@ $(document).ready(function() {
                 result += `<p><strong>Description: </strong>${description}</p>`;
             }
             if(reminder){
-                result += `<p><strong>Reminder on: </strong>${reminder}</p>`;
+                result += `<p><strong>Reminder on: </strong>${new Date(reminder)}</p>`;
             }
             result += `<p class="delete_task">
                     <input type="submit" name="delete" class="button btn btn-danger" value="Delete Task">
@@ -445,7 +445,7 @@ $(document).ready(function() {
             <h3>${single.name}</h3>
             <span style="display: none;">${single._id}</span>`
             if(single.date){
-                result += `<p><strong>On: </strong>${single.date}</p>`;
+                result += `<p><strong>On: </strong>${new Date(single.date)}</p>`;
             }
             if(single.venue){
                 result += `<p><strong>Venue: </strong>${single.venue}</p>`;
@@ -457,7 +457,7 @@ $(document).ready(function() {
                 result += `<p><strong>Description: </strong>${single.description}</p>`;
             }
             if(single.reminder){
-                result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
             }
             result += `
             <p class="delete_event">
@@ -483,7 +483,7 @@ $(document).ready(function() {
             <h3>${single.name}</h3>
             <span style="display: none;">${single._id}</span>`
             if(single.deadline){
-                result += `<p><strong>Deadline: </strong>${single.deadline}</p>`;
+                result += `<p><strong>Deadline: </strong>${new Date(single.deadline)}</p>`;
             }
             if(single.location){
                 result += `<p><strong>Location: </strong>${single.location}</p>`;
@@ -492,7 +492,7 @@ $(document).ready(function() {
                 result += `<p><strong>Description: </strong>${single.description}</p>`;
             }
             if(single.reminder){
-                result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
             }
             result += `
             <p class="delete_task">
@@ -546,7 +546,7 @@ $(document).ready(function() {
             <h3>${single.name}</h3>
             <span style="display: none;">${single._id}</span>`
             if(single.date){
-                result += `<p><strong>On: </strong>${single.date}</p>`;
+                result += `<p><strong>On: </strong>${new Date(single.date)}</p>`;
             }
             if(single.venue){
                 result += `<p><strong>Venue: </strong>${single.venue}</p>`;
@@ -558,7 +558,7 @@ $(document).ready(function() {
                 result += `<p><strong>Description: </strong>${single.description}</p>`;
             }
             if(single.reminder){
-                result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
             }
             result += `
             <p class="add_event">
@@ -581,7 +581,7 @@ $(document).ready(function() {
             <h3>${single.name}</h3>
             <span style="display: none;">${single._id}</span>`
             if(single.deadline){
-                result += `<p><strong>Deadline: </strong>${single.deadline}</p>`;
+                result += `<p><strong>Deadline: </strong>${new Date(single.deadline)}</p>`;
             }
             if(single.location){
                 result += `<p><strong>Location: </strong>${single.location}</p>`;
@@ -590,7 +590,7 @@ $(document).ready(function() {
                 result += `<p><strong>Description: </strong>${single.description}</p>`;
             }
             if(single.reminder){
-                result += `<p><strong>Reminder on: </strong>${single.reminder}</p>`;
+                result += `<p><strong>Reminder on: </strong>${new Date(single.reminder)}</p>`;
             }
             result += `
             <p class="add_task">

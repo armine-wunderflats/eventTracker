@@ -18,7 +18,6 @@ async function login(username, password) {
         user =await Users.findUserForLogin(username);
         if(!user){
             throw new UserNotFound(username);
-            return;
         }
         console.log("found user: ");
         console.log(user);
@@ -60,7 +59,6 @@ async function getUser(username) {
         const user = await Users.findUsername(username);
         if(!user){
             throw new UserNotFound(username);
-            return;
         }
         return user;
     }
@@ -75,7 +73,6 @@ async function getUserById(_id) {
         const user = await Users.findUserById(_id);
         if(!user){
             throw new UserNotFound(_id);
-            return;
         }
         return user;
     }
@@ -101,16 +98,13 @@ async function createUser(user) {
         let email = user.email;
         if(!username || !user.password){
             throw new UsernameAndPasswordMustBeProvided();
-            return;
         }
         if(username.length < 4){
             throw new ValidationError();
-            return;
         }
         if(await Users.findUsername(username) || await Users.findEmail(email)){
             console.log("got result");
             throw new UserAlreadyExists(username);
-            return;
         }
         await user.save( function (err, user) {
             if(err){ 

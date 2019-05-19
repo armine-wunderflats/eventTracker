@@ -13,6 +13,7 @@ const {
     removeFromTasks,
     DeleteTask
 } = require(`${path}/models/taskModel.js`);
+const { DateNotValid } = require(`${path}/errors/errors.js`);
 
 const {
     getUser
@@ -24,11 +25,17 @@ router.post('/', async function(req, res, next) {
         const body = req.body;
         let deadline='';
         if(body.deadline){
-            deadline = new Date(body.deadline);
+            deadline = Date.parse(body.deadline);
+            if(!deadline){
+                throw new DateNotValid('deadline');
+            }
         }
         let reminder = '';
         if(body.reminder){
-            reminder = new Date(body.reminder);
+            reminder = Date.parse(body.reminder);
+            if(!reminder){
+                throw new DateNotValid('reminder');
+            }
         }
         const task = new Task({
             name: body.name,
