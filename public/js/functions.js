@@ -465,9 +465,7 @@ $(document).ready(function() {
         });
     });
     $(document).on('click','.delete_schedule', function(){
-        console.log('here');
         let name = $(this).parent().find('h3').get( 0 ).innerHTML;
-        console.log(name);
         $(this).parent().css("display", "none");
         $.post("/schedule/delete", {name},  function(data) {
             
